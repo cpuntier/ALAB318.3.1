@@ -31,32 +31,48 @@ router.route("/")
     });
 
 router.route("/:id")
-    .get((req, res,next) => {
-        // const links = [
-        //     {
-        //       href: `/${req.params.id}`,
-        //       rel: "",
-        //       type: "PATCH",
-        //     },
-        //     {
-        //       href: `/${req.params.id}`,
-        //       rel: "",
-        //       type: "DELETE",
-        //     },
-        //   ];
-
-
-
+    .get((req, res, next) => {
+        const links = [
+            {
+                href: `/${req.params.id}`,
+                rel: "",
+                type: "PATCH",
+            },
+            {
+                href: `/${req.params.id}`,
+                rel: "",
+                type: "DELETE",
+            },
+        ];
 
         comment = comments.find((c) => c.id == req.params["id"])
         console.log(comment);
 
         if (comment) {
 
-            res.json({ comment });
+            res.json({ comment, links });
         } else {
             next();
         }
-
+    }).patch((req, res, next) => {
+        const comment = comments.find((c, i) => {
+            if (c.id == req.params["id"]) {
+                console.log(c);
+                for (const key in req.body) {
+                    comments[i][key] = req.body[key];
+                }
+                return true;
+            }
+        });
+        if (comment) res.json(comment);
+        else next();
+    }).delete((req, res, next) => {
+        const comment = comments.find((c, i) => {
+            if (c.id == req.params.id) {
+                comments.splice(i, 1);
+                return true;
+            }
+        }
+        )
     })
 module.exports = router;
