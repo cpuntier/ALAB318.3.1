@@ -86,6 +86,9 @@ router
   .get((req,res,next) => {
     const user = users.find((u) => u.id == req.params.id);
     const post = posts.filter((u) => u.userId == req.params.id);
-    res.json(post);
+    if(post) res.json(post);else  next();
   })
+
+
+  
 module.exports = router;
